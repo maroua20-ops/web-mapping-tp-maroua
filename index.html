@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP de Web Mapping - Welcome</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="leaflet.css" />
+
+    <!-- Leaflet JS -->
+    <script src="leaflet.js"></script>
+
+    <!-- GeoJSON (Importe ton fichier GeoJSON ici) -->
+    <script src="kama.geojson" type="text/javascript"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+        }
+
+        /* En-tête avec effet esthétique */
+        #header {
+            background-color: #04a7ec;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 28px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Date du jour et citation */
+        #date {
+            margin-top: 10px;
+            text-align: center;
+            color: #444;
+            font-size: 16px;
+        }
+        
+        #quote {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Carte avec bordure esthétique */
+        #map {
+            width: 80%;
+            height: 500px;
+            margin: 20px auto;
+            border: 2px solid #12b0fa;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Popups esthétiques */
+        .leaflet-popup-content-wrapper {
+            background-color: #f9f9f9;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Section d'accueil -->
+    <div id="header">
+        Welcome to the Web Mapping TP!
+    </div>
+
+    <!-- Affichage de la date et citation inspirante -->
+    <div id="date"></div>
+    <div id="quote">"Success is not the key to happiness. Happiness is the key to success." - Albert Schweitzer</div>
+
+    <!-- Carte -->
+    <div id="map"></div>
+
+    <script>
+        // Fonction pour afficher la date actuelle
+        function displayDate() {
+            var today = new Date();
+            var date = today.toLocaleDateString('fr-FR', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+            document.getElementById('date').innerHTML = "Date d'aujourd'hui : " + date;
+        }
+        displayDate();
+
+        // Initialisation de la carte centrée sur une position spécifique
+        var map = L.map('map').setView([33.97655137473346, -6.866696535339877], 12);
+
+        // Ajout des tuiles OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+         // Chargement des données GeoJSON avec des popups et des styles colorés
+         L.geoJSON(maroua).addTo(map).bindPopup("les regions du maroc")
+            // Fonction pour générer des couleurs pour chaque région
+             function getColor(code) {
+             switch (code) {
+                case '01': return '#ff9999';  // Rose clair
+                case '02': return '#66b3ff';  // Bleu clair
+                case '03': return '#99ff99';  // Vert clair
+                case '04': return '#ffcc99';  // Orange clair
+                case '05': return '#c2c2f0';  // Violet clair
+                case '06': return '#ffb3e6';  // Rose
+                default: return '#f2f2f2';    // Gris clair
+              }
+            }
+
+             // Style appliqué aux régions
+             function style(code) {
+             return {
+                fillColor: getColor(1), // Couleur en fonction du code de la région
+                weight: 2,
+                opacity: 1,
+                color: 'white', // Bordure blanche
+                dashArray: '3',
+                fillOpacity: 0.7
+             };
+              }
+              function style(code) {
+             return {
+                fillColor: getColor(2), // Couleur en fonction du code de la région
+                weight: 2,
+                opacity: 1,
+                color: 'blue', // Bordure blanche
+                dashArray: '3',
+                fillOpacity: 0.7
+             };
+              }
+              function style(code) {
+             return {
+                fillColor: getColor(3), // Couleur en fonction du code de la région
+                weight: 2,
+                opacity: 1,
+                color: 'white', // Bordure blanche
+                dashArray: '3',
+                fillOpacity: 0.7
+             };
+              }
+                 // Fonction pour générer des popups avec le nom et le code de la région
+             function onEachFeature(feature, layer) {
+             let popupContent = "<h3 style='color: #3a443a;'>" + feature.properties.name + "</h3>";
+             popupContent += "<p><strong>Code de la région:</strong> " + feature.properties.code + "</p>";
+             popupContent += "<p><strong>Population:</strong> " + feature.properties.population + "</p>";
+             popupContent += "<p><strong>Superficie:</strong> " + feature.properties.area + " km²</p>";
+             popupContent += "<p><em>Cette région est unique avec ses paysages diversifiés et sa culture riche.</em></p>";
+             layer.bindPopup(popupContent);
+        }
+
+    </script>
+</body>
+</html>
